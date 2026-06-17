@@ -2,9 +2,44 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>FİLMLOBİ</title>
+    <title>FİLMLOBİ - FİLM LİSTESİ</title>
+    <style>
+        .film-kart { border: 1px solid #ccc; padding: 10px; margin: 10px; display: inline-block; width: 200px; }
+        img { width: 100%; }
+    </style>
 </head>
 <body>
-    <h1>FİLMLOBİ - Sitemiz Yayında!</h1>
+    <h1>FİLMLOBİ</h1>
+    <!-- Filmlerin görüneceği alan -->
+    <div id="film-kapsayici"></div>
+
+    <script>
+        // Veriyi çekip ekrana basan fonksiyon
+        async function filmleriGetir() {
+            try {
+                const response = await fetch('data.json');
+                const filmList = await response.json();
+                
+                const kapsayici = document.getElementById('film-kapsayici');
+                
+                // Her bir filmi döngüyle ekrana yazdırıyoruz
+                filmList.forEach(film => {
+                    const kart = document.createElement('div');
+                    kart.className = 'film-kart';
+                    kart.innerHTML = `
+                        <img src="${film.poster}" alt="${film.baslik}">
+                        <h3>${film.baslik}</h3>
+                        <p>IMDb: ${film.imdb}</p>
+                    `;
+                    kapsayici.appendChild(kart);
+                });
+            } catch (hata) {
+                console.error("Veri yüklenirken bir hata oluştu:", hata);
+            }
+        }
+
+        // Sayfa açıldığında çalıştır
+        filmleriGetir();
+    </script>
 </body>
 </html>
