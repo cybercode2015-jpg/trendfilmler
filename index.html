@@ -4,25 +4,26 @@
     <meta charset="UTF-8">
     <title>FİLMLOBİ - FİLM LİSTESİ</title>
     <style>
-        .film-kart { border: 1px solid #ccc; padding: 10px; margin: 10px; display: inline-block; width: 200px; }
-        img { width: 100%; }
+        .film-kart { border: 1px solid #ccc; padding: 10px; margin: 10px; display: inline-block; width: 200px; text-align: center; }
+        img { width: 100%; height: auto; }
     </style>
 </head>
 <body>
     <h1>FİLMLOBİ</h1>
-    <!-- Filmlerin görüneceği alan -->
-    <div id="film-kapsayici"></div>
+    <div id="film-kapsayici">Yükleniyor...</div>
 
     <script>
-        // Veriyi çekip ekrana basan fonksiyon
         async function filmleriGetir() {
+            const kapsayici = document.getElementById('film-kapsayici');
             try {
-                const response = await fetch('data.json');
+                // Kendi dosyanın RAW linkini buraya net bir şekilde yazıyoruz
+                const response = await fetch('https://raw.githubusercontent.com/cybercode2015-jpg/trendfilmler/main/data.json');
+                
+                if (!response.ok) throw new Error('Veri çekilemedi!');
+                
                 const filmList = await response.json();
+                kapsayici.innerHTML = ''; // "Yükleniyor" yazısını sil
                 
-                const kapsayici = document.getElementById('film-kapsayici');
-                
-                // Her bir filmi döngüyle ekrana yazdırıyoruz
                 filmList.forEach(film => {
                     const kart = document.createElement('div');
                     kart.className = 'film-kart';
@@ -34,11 +35,10 @@
                     kapsayici.appendChild(kart);
                 });
             } catch (hata) {
-                console.error("Veri yüklenirken bir hata oluştu:", hata);
+                kapsayici.innerHTML = 'Hata oluştu: ' + hata.message;
+                console.error(hata);
             }
         }
-
-        // Sayfa açıldığında çalıştır
         filmleriGetir();
     </script>
 </body>
